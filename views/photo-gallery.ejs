@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Multer File Upload to Automatically Generate a Photo Gallery from a Directory in NodeJs">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <title>Auto Generate a Photo Gallery from a Directory in NodeJs</title>
+    <style>
+        .blog{
+            width:600px;
+            font-family: Lato, sans-serif;
+            line-height:1.5rem;
+        }
+        .gallery{
+            position:relative;
+            display:grid;
+            grid-template-columns:repeat(6,100px);
+            grid-template-rows:repeat(5,100px);
+        }
+        .item{
+            margin:0.2em;
+        }
+        .small:hover{
+            opacity:0.5;
+        }
+        .item img{
+            height:100%;
+            width:100%;
+            object-fit:cover;
+        }
+        .feature{
+            grid-row: 1 / span 4;
+            grid-column: 1 / span 6;
+            position:relative;
+        }
+        .arrow{
+            position:absolute;
+            bottom:0px;
+            background:#546E7A;
+            opacity:0.9;
+            box-shadow:5px 5px 5px #37474F;
+            border-radius:50%;
+            width:30px;
+            height:30px;
+            margin:0.2em;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        }
+        .arrow img{
+            width:20px;
+            height:20px;
+        }
+        .arrow-left{
+            left:-20px;
+        }
+        .arrow-right{
+            right:-20px;
+        }
+        @media screen and (min-width:768px){
+            .blog{
+                width: auto;
+                margin: 0 3em;
+            }
+        }
+    </style>  
+</head>
+<body>
+    <div class="container">
+        <h4><%= typeof title != 'undefined' ? title : '' %></h4>
+        <div class="gallery">
+            <div class="item feature">
+                <img data-key='1' src="<%= images[0] %>" alt="first-img" />
+                <div class='arrow arrow-left'>
+                    <img src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/3521175/arrow-left.svg' />
+                </div>
+                <div class='arrow arrow-right'>
+                    <img src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/3521175/arrow-right.svg' />
+                </div>
+            </div>
+
+            <div class="item small">
+                <% for(var i=0; i<images.length; i++) {%>
+                    <img data-key="<%= i %>" src="<%= images[i] %>"/>
+                <% } %>
+            </div>
+
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <!-- script for displaying the photos in gallery -->
+    <script>
+        const featureImage = document.querySelector(".feature img");
+        const smallImages = document.querySelectorAll(".small img");
+        const smallImagesArray = Array.from(smallImages);
+        const imgSRC = smallImagesArray.map(image => image.src);
+        const buttons = document.querySelectorAll(".arrow");
+
+        smallImages.forEach(image => image.addEventListener("click", changeFeatureImage));
+        buttons.forEach(button => button.addEventListener("click", nextImage));
+
+        function changeFeatureImage() {
+            featureImage.src = this.src;
+            featureImage.dataset.key = this.dataset.key;
+        }
+
+        function nextImage() {
+            // find out data-key of current image
+            const currentImage = document.querySelector(".feature img");
+            const currentKey = parseInt(currentImage.dataset.key);
+            // find out the key for the next image
+            let newKey = 0;
+            if (this.className.includes("right")){
+                newKey = currentKey + 1;
+                if(newKey > 6){newKey = 1} 
+            }else{
+                newKey = currentKey - 1;
+                if(newKey < 1){newKey = 6}
+            }
+            // update data-key and src of feature image
+            featureImage.dataset.key = newKey;
+            featureImage.src = imgSRC[newKey-1];
+        }
+  </script> 
+</body>
+</html>

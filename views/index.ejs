@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Multer File Upload to Automatically Generate a Photo Gallery from a Directory in NodeJs">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>Node + Multer File Uploads</title>
+</head>
+<body>
+    <div class="container">
+        <h4>NodeJs and Multer File Uploads</h4>
+        <p>Upload different images and see the Photo gallery in action.</p>
+        <%= typeof msg != 'undefined' ? msg : '' %>
+        <form action="/upload" method="POST" enctype="multipart/form-data" class="row">
+            <div class="file-field input-field">
+                <div class="btn blue">
+                    <span>File</span>
+                    <input name="myImage" type="file">
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text">
+                </div>
+            </div>
+            <button type="submit" class="btn green">Upload</button>
+            <a class="btn purple" href="/photo-gallery"><i class="material-icons left">photo_library</i>Go to Photo Gallery</a>
+        </form> 
+        <br>
+
+        <img src="<%= typeof file != 'undefined' ? file : '' %>" class="responsive-img">
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>  
+</body>
+</html>
